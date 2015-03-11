@@ -13,5 +13,9 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *tableview;
 
+@property (weak, nonatomic) IBOutlet UITextField *searchfield;
+
+- (IBAction)search:(id)sender;
+
 @end
 

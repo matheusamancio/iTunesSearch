@@ -38,13 +38,11 @@ static bool isFirstAccess = YES;
     NSData *jsonData = [NSData dataWithContentsOfURL: [NSURL URLWithString:url]];
     
     NSError *error;
-    NSDictionary *resultado = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                              options:NSJSONReadingMutableContainers
-                                                                error:&error];
-    if (error) {
-        NSLog(@"Não foi possível fazer a busca. ERRO: %@", error);
-        return nil;
-    }
+    NSDictionary *resultado = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+//    if (error) {
+//        NSLog(@"Não foi possível fazer a busca. ERRO: %@", error);
+//        return nil;
+//    }
     
     NSArray *resultados = [resultado objectForKey:@"results"];
     NSMutableArray *filmes = [[NSMutableArray alloc] init];
