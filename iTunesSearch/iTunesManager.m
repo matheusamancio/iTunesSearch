@@ -24,44 +24,54 @@ static bool isFirstAccess = YES;
         isFirstAccess = NO;
         SINGLETON = [[super allocWithZone:NULL] init];    
     });
-    
     return SINGLETON;
 }
 
 
-- (NSArray *)buscarMidias:(NSString *)termo {
+- (NSArray *)buscarMidias:(NSString *)termo andMedia: (NSString *)media {
+    
     if (!termo) {
         termo = @"";
     }
-    
-    NSString *url = [NSString stringWithFormat:@"https://itunes.apple.com/search?term=%@&media=movie", termo];
-    NSData *jsonData = [NSData dataWithContentsOfURL: [NSURL URLWithString:url]];
-    
-    NSError *error;
-    NSDictionary *resultado = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
-//    if (error) {
-//        NSLog(@"Não foi possível fazer a busca. ERRO: %@", error);
-//        return nil;
-//    }
-    
-    NSArray *resultados = [resultado objectForKey:@"results"];
-    NSMutableArray *filmes = [[NSMutableArray alloc] init];
-    
-    for (NSDictionary *item in resultados) {
-        Filme *filme = [[Filme alloc] init];
-        [filme setNome:[item objectForKey:@"trackName"]];
-        [filme setTrackId:[item objectForKey:@"trackId"]];
-        [filme setArtista:[item objectForKey:@"artistName"]];
-        [filme setDuracao:[item objectForKey:@"trackTimeMillis"]];
-        [filme setGenero:[item objectForKey:@"primaryGenreName"]];
-        [filme setPais:[item objectForKey:@"country"]];
-        [filmes addObject:filme];
+    @try {
+        NSString *url = [NSString stringWithFormat:@"https://itunes.apple.com/search?term=%@&media=%@", termo, media];
+        NSData *jsonData = [NSData dataWithContentsOfURL: [NSURL URLWithString:url]];
+        NSError *error;
+        NSDictionary *resultado = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if (error) {
+            NSLog(@"Não foi possível fazer a busca. ERRO: %@", error);
+            return nil;
+        }
+        
+        NSArray *resultados = [resultado objectForKey:@"results"];
+        NSMutableArray *filmes = [[NSMutableArray alloc] init];
+      
+        
+        for (NSDictionary *item in resultados) {
+            
+            Filme *filme = [[Filme alloc] init];
+            [filme setMidia:media];
+            [filme setNome:[item objectForKey:@"trackName"]];
+            [filme setTrackId:[item objectForKey:@"trackId"]];
+            [filme setArtista:[item objectForKey:@"artistName"]];
+            [filme setDuracao:[item objectForKey:@"trackTimeMillis"]];
+            [filme setGenero:[item objectForKey:@"primaryGenreName"]];
+            [filme setPais:[item objectForKey:@"country"]];
+            [filmes addObject:filme];
+        }
+        
+        return filmes;
     }
     
-    return filmes;
+    
+    @catch (NSException *exception) {
+        UIAlertView *alerta = [[UIAlertView alloc]initWithTitle:@"caraca deu ruim" message:@"mano faz alguma coisa" delegate:self cancelButtonTitle:@"CANCELAA "otherButtonTitles:nil];
+        [alerta show];
+        return nil;
+        
+    }
+
 }
-
-
 
 
 #pragma mark - Life Cycle

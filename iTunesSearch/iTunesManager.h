@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface iTunesManager : NSObject
 
@@ -16,6 +17,6 @@
  */
 + (iTunesManager*)sharedInstance;
 
-- (NSArray *)buscarMidias:(NSString *)termo;
+- (NSArray *)buscarMidias:(NSString *)termo andMedia:(NSString*)media;
 
 @end
